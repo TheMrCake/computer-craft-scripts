@@ -14,7 +14,7 @@ local ignoredFiles = {
   ["LICENSE"] = true,
 }
 
-local function downloadFolder(data)
+local function downloadFolder(data, path)
   for _, item in ipairs(data) do
     if ignoredFiles[item.name] then
       goto continue
@@ -22,12 +22,13 @@ local function downloadFolder(data)
 
     if item.type == "file" then
       local rawUrl = item.download_url
-      shell.run("wget", rawUrl, item.name)
+      shell.run("wget", rawUrl, path..item.name)
     elseif item.type == "dir" then
-      downloadFolder(http.get(apiUrl..item.path) or error("Can't find folder: "..item.path))
+      fs.makeDir(item.path)
+      downloadFolder(http.get(apiUrl..item.path) or error("Can't find folder: "..item.path), item.path)
     end
       ::continue::
   end
 end
 
-downloadFolder(repoData)
+downloadFolder(repoData, "")
