@@ -1,16 +1,13 @@
 local userName = "TheMrCake"
 local repo = "computer-craft-scripts"
 
--- Working Directory
-local wd = fs.getDir(shell.getRunningProgram())
-
 local apiUrl = "https://api.github.com/repos/"..userName.."/"..repo.."/contents/"
 
-local response = http.get(apiUrl) or error("Fuck, this shouldn't happen. Couldn't connect to the repo.")
-local responseText = response.readAll() or error("Can't be read")
-response.close()
+local initialResponse = http.get(apiUrl) or error("Couldn't connect to the repo.")
+local initialResponseText = initialResponse.readAll() or error("Can't be read")
+initialResponse.close()
 
-local repoData = textutils.unserializeJSON(responseText, {})
+local repoData = textutils.unserializeJSON(initialResponseText, {})
 
 local ignoredFiles = {
   [".luarc.json"] = true,
@@ -26,10 +23,12 @@ local function downloadFolder(data, path)
 
     if item.type == "file" then
       local rawUrl = item.download_url
-      shell.run("wget", rawUrl, wd.."/"..path..item.name)
+      print(item.name)
+      shell.run("wget", rawUrl, "./"..path.."/"..item.name)
     elseif item.type == "dir" then
-      fs.makeDir(wd.."/"..item.path)
-      downloadFolder(http.get(apiUrl..item.path) or error("Can't find folder: "..item.path), item.path)
+      shell.run("mkdir", item.path)
+      local responseText = http.get(apiUrl..item.path).readAll() or error("Can't find folder: "..item.path)
+      downloadFolder(textutils.unserializeJSON(responseText, {}), item.path)
     end
       ::continue::
   end
