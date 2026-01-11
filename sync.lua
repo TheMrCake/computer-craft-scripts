@@ -27,7 +27,7 @@ local function downloadFolder(data, path)
       local rawUrl = item.download_url
       shell.run("wget", rawUrl, wd..path..item.name)
     elseif item.type == "dir" then
-      fs.makeDir(wd..item.path)
+      fs.makeDir(wd.."/"..item.path)
       downloadFolder(http.get(apiUrl..item.path) or error("Can't find folder: "..item.path), item.path)
     end
       ::continue::
