@@ -13,6 +13,7 @@ response.close()
 local repoData = textutils.unserializeJSON(responseText, {})
 
 local ignoredFiles = {
+  [".luarc.json"] = true,
   [".gitignore"] = true,
   ["LICENSE"] = true,
 }
@@ -25,7 +26,7 @@ local function downloadFolder(data, path)
 
     if item.type == "file" then
       local rawUrl = item.download_url
-      shell.run("wget", rawUrl, wd..path..item.name)
+      shell.run("wget", rawUrl, wd.."/"..path..item.name)
     elseif item.type == "dir" then
       fs.makeDir(wd.."/"..item.path)
       downloadFolder(http.get(apiUrl..item.path) or error("Can't find folder: "..item.path), item.path)
