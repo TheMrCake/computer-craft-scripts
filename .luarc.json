@@ -1,5 +1,13 @@
 {
+  "runtime": {
+    "version": "Lua 5.2"
+  },
+  "workspace": {
+    "library": [
+      "./cc-stubs/"
+    ]
+  },
   "diagnostics": {
-    "globals": ["peripheral", "term", "redstone", "fs", "os", "http"]
+    "globals": ["peripheral", "term", "redstone", "fs", "os", "http", "shell", "textutils"]
   }
 }
