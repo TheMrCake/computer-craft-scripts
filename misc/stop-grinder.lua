@@ -4,7 +4,7 @@ local pinkSlimeTank = peripheral.wrap("advancedFluidTank_0") or error("PinkSlime
 
 while true do
   local output = true
-  if meatTank.getCapacity() == meatTank.getStored().amount or pinkSlimeTank.getCapacity() == pinkSlimeTank.getStored().amount then
+  if meatTank.getCapacity() == meatTank.getStored().amount and pinkSlimeTank.getCapacity() == pinkSlimeTank.getStored().amount then
     output = false
   end
 
